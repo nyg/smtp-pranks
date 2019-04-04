@@ -1,0 +1,7 @@
+# Compute_server gitignore
+
+# Intellij
+.idea/
+*.iml
+target
+*.jar
