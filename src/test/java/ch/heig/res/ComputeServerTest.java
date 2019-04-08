@@ -13,24 +13,34 @@ public class ComputeServerTest {
     public static void startServerThread() {
         new Thread(new ServerRunnable()).start();
     }
-    
+
 
     @Test
     public void theServerShouldCarryASimpleTransaction(){
+        String mail_from = "testMail@mail.com";
+        String rcpt_to = "victim@mail.com";
+        String data = "Hello there.";
+
         ComputeClient client = new ComputeClient(serverPort, serverIP);
         client.startConnection();
 
         //TODO Simple transaction
+        client.sendMail(mail_from, rcpt_to, data);
 
         client.endConnection();
     }
 
     @Test
     public void theServerShouldAbortATransaction(){
+        String mail_from = "test@mail.com";
+        String rcpt_to = "mail.com"; // Wrong format to trigger an error
+        String data = "Oups";
+
         ComputeClient client = new ComputeClient(serverPort, serverIP);
         client.startConnection();
 
         //TODO Abort transaction
+        client.sendMail(mail_from, rcpt_to, data);
 
         client.endConnection();
 
