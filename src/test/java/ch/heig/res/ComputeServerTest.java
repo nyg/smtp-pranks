@@ -14,31 +14,36 @@ public class ComputeServerTest {
         new Thread(new ServerRunnable()).start();
     }
 
+
     @Test
-    public void aServerShouldComputeAnExpression() {
+    public void theServerShouldCarryASimpleTransaction(){
+        String mail_from = "testMail@mail.com";
+        String rcpt_to = "victim@mail.com";
+        String data = "Hello there.";
 
         ComputeClient client = new ComputeClient(serverPort, serverIP);
         client.startConnection();
 
-        Double result = client.sendComputation("1 + 3 * (5 - 2)");
-        Assertions.assertEquals(10, result);
+        //TODO Simple transaction
+        client.sendMail(mail_from, rcpt_to, data);
 
         client.endConnection();
     }
 
     @Test
-    public void aServerShouldComputeMultipleExpressions() {
+    public void theServerShouldAbortATransaction(){
+        String mail_from = "test@mail.com";
+        String rcpt_to = "mail.com"; // Wrong format to trigger an error
+        String data = "Oups";
 
         ComputeClient client = new ComputeClient(serverPort, serverIP);
         client.startConnection();
 
-        Double result = client.sendComputation("1 + 3 * (5 - 2)");
-        Assertions.assertEquals(10, result);
-
-        result = client.sendComputation("2 + 3 * (5 - 2)");
-        Assertions.assertEquals(11, result);
+        //TODO Abort transaction
+        client.sendMail(mail_from, rcpt_to, data);
 
         client.endConnection();
+
     }
 
     private static class ServerRunnable implements Runnable {
