@@ -13,32 +13,27 @@ public class ComputeServerTest {
     public static void startServerThread() {
         new Thread(new ServerRunnable()).start();
     }
+    
 
     @Test
-    public void aServerShouldComputeAnExpression() {
-
+    public void theServerShouldCarryASimpleTransaction(){
         ComputeClient client = new ComputeClient(serverPort, serverIP);
         client.startConnection();
 
-        Double result = client.sendComputation("1 + 3 * (5 - 2)");
-        Assertions.assertEquals(10, result);
+        //TODO Simple transaction
 
         client.endConnection();
     }
 
     @Test
-    public void aServerShouldComputeMultipleExpressions() {
-
+    public void theServerShouldAbortATransaction(){
         ComputeClient client = new ComputeClient(serverPort, serverIP);
         client.startConnection();
 
-        Double result = client.sendComputation("1 + 3 * (5 - 2)");
-        Assertions.assertEquals(10, result);
-
-        result = client.sendComputation("2 + 3 * (5 - 2)");
-        Assertions.assertEquals(11, result);
+        //TODO Abort transaction
 
         client.endConnection();
+
     }
 
     private static class ServerRunnable implements Runnable {
