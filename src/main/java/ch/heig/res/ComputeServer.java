@@ -1,7 +1,5 @@
 package ch.heig.res;
 
-import org.mariuszgromada.math.mxparser.Expression;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -69,11 +67,11 @@ public class ComputeServer {
                         Matcher m = p.matcher(request);
 
                         if (m.find()) {
-                            Expression math = new Expression(m.group(1));
-                            double result = math.calculate();
+                            //Expression math = new Expression(m.group(1));
+                            //double result = math.calculate();
 
-                            LOG.info(String.format("Sending result to client: %f", result));
-                            output.write("RESULT " + result + " END\n");
+                            //LOG.info(String.format("Sending result to client: %f", result));
+                            //output.write("RESULT " + result + " END\n");
                             output.flush();
                         }
                         else {

@@ -45,6 +45,7 @@ public class Victims {
                 groups.add(currentGroup);
             }
 
+            reader.close();
             return groups;
         }
         catch (IOException e) {
