@@ -1,4 +1,4 @@
-# SMTP Pranks [![Build Status](https://travis-ci.org/nyg/smtp-pranks.svg?branch=master)](https://travis-ci.org/nyg/smtp-pranks)
+# SMTP Pranks [![Build Status](https://travis-ci.org/nyg/smtp-pranks.svg?branch=master)](https://travis-ci.org/nyg/smtp-pranks) [![codecov](https://codecov.io/gh/nyg/smtp-pranks/branch/master/graph/badge.svg)](https://codecov.io/gh/nyg/smtp-pranks)
 
 ## Description
 
