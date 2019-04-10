@@ -11,24 +11,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class TCPClient {
 
     private static final Logger LOG = Logger.getLogger(TCPClient.class.getName());
-    //private static final String SERVER_REQUEST_FORMAT = "^RESULT (.*) END$";
-
-
-
-    private int port;
-    private String ip;
-    private String hostName;
 
     protected Socket socket = null;
     protected BufferedReader input;
     protected BufferedWriter output;
+
+    private int port;
+    private String ip;
+    private String hostName;
 
     public TCPClient(int port, String ip) {
         this.port = port;
@@ -41,7 +39,7 @@ public class TCPClient {
     public void startConnection() {
 
         if (socket != null) {
-            LOG.warning("Already connected to server, disconnect or create new instance.");
+            LOG.warning("Already connected to server, disconnect or create a new TCPClient instance.");
             return;
         }
 
@@ -49,10 +47,10 @@ public class TCPClient {
             socket = new Socket(InetAddress.getByName(ip), port);
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
         }
         catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -63,7 +61,9 @@ public class TCPClient {
 
         if (socket == null) {
             LOG.warning("Not connected to server.");
+            return;
         }
+
         try {
             input.close();
             output.close();
@@ -73,30 +73,58 @@ public class TCPClient {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
         finally {
+            output = null;
+            socket = null;
             socket = null;
         }
     }
 
+    /**
+     * Sends a message to the server. A new line will be appended to the given
+     * value.
+     *
+     * @param message the message to send
+     */
     public void sendMessage(String message) {
+
         try {
-            output.write(message, 0, message.length());
+            output.write(message + "\n");
+            output.flush();
         }
-        catch (IOException e){
+        catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }
 
-    public String readMessage(){
-        String message = "";
-        String line = "";
-        try{
-            while ((line = input.readLine()) != null)
-            message += line;
+    /**
+     * Reads a message from the server.
+     *
+     * @return the server's message
+     */
+    public String readMessage() {
+
+        StringBuilder message = new StringBuilder();
+        try {
+            String line;
+            while ((line = input.readLine()) != null) {
+                message.append(line);
+            }
         }
-        catch (IOException e){
+        catch (SocketTimeoutException e) {
+            // no big deal, return what we have read until now
+            LOG.warning("A SocketTimeoutException occured.");
+        }
+        catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
 
-        return message;
+        return message.toString();
+    }
+
+    /**
+     * Method only for unit tests. Package visibility.
+     */
+    void setSocketTimeout(int seconds) throws SocketException {
+        socket.setSoTimeout(seconds * 1000);
     }
 }
