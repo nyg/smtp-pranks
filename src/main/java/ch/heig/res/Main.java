@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        if (args.length != 3) {
+       /* if (args.length != 3) {
             System.out.println("Usage: compute-server [client|server] <ip address> <port>");
             System.exit(1);
         }
@@ -20,12 +20,12 @@ public class Main {
         final int serverPort = Integer.parseInt(args[2]);
 
         if (args[0].equals("server")) {
-            ComputeServer server = new ComputeServer(serverPort, serverIP);
+            SMTPClient server = new SMTPClient(serverPort, serverIP);
             server.serveClients();
         }
         else if (args[0].equals("client")) {
 
-            ComputeClient client = new ComputeClient(serverPort, serverIP);
+            TCPClient client = new TCPClient(serverPort, serverIP);
             client.startConnection();
 
             Console console = System.console();
@@ -47,6 +47,6 @@ public class Main {
         else {
             System.out.println("Usage: compute-server [client|server] <ip address> <port>");
             System.exit(1);
-        }
+        }*/
     }
 }
