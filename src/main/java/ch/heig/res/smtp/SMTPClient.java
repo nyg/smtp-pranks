@@ -42,7 +42,7 @@ public class SMTPClient extends TCPClient {
         String rcptTo = "RCPT TO:<" + rcpt + ">";
 
         // sending mail's sender
-        output.write(mailFrom, 0, mailFrom.length());
+        sendMessage(mailFrom);
 
         // Checking server answer
         if (readMessage() != "250 OK"){
@@ -50,24 +50,24 @@ public class SMTPClient extends TCPClient {
         }
 
         // sending mail's target
-        output.write(rcptTo, 0, rcptTo.length());
+        sendMessage(rcptTo);
 
         if (readMessage() != "250 OK"){
             abortConnection();
         }
 
         // Preparing to send mail's body
-        output.write(DATA, 0, DATA.length());
+        sendMessage(DATA);
 
         if (readMessage() != "250 OK"){
             abortConnection();
         }
 
         // sending mail's message
-        output.write(data, 0, data.length());
+        sendMessage(data);
 
         // Ending message
-        output.write(endData, 0, endData.length());
+        sendMessage(endData);
 
         // Getting server's answer
         readMessage();
