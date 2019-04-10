@@ -3,6 +3,8 @@ package ch.heig.res.tcp;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.net.SocketException;
+
 class TCPClientTest {
 
     // tcpbin.org – TCP server which will echo back the sent message
@@ -16,7 +18,7 @@ class TCPClientTest {
     }
 
     @Test
-    public void tcpClientShouldSendMessageToServer() throws InterruptedException {
+    public void tcpClientShouldSendMessageToServerAndReceiveResponse() throws InterruptedException, SocketException {
 
         TCPClient client = new TCPClient(serverPort, serverIP);
         client.startConnection();
@@ -25,9 +27,16 @@ class TCPClientTest {
         client.sendMessage(message);
 
         // Wait for response
-        Thread.sleep(1000);
+        client.setSocketTimeout(2);
         String response = client.readMessage();
 
         Assertions.assertEquals(message, response);
+    }
+
+    @Test
+    public void tcpClientShouldCloseConnectionWithServer() {
+        TCPClient client = new TCPClient(serverPort, serverIP);
+        client.startConnection();
+        client.endConnection();
     }
 }
