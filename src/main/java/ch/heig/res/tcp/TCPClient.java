@@ -79,7 +79,8 @@ public class TCPClient {
 
     public void sendMessage(String message) {
         try {
-            output.write(message, 0, message.length());
+            output.write(message + "\n");
+            output.flush();
         }
         catch (IOException e){
             LOG.log(Level.SEVERE, e.getMessage(), e);
@@ -88,10 +89,10 @@ public class TCPClient {
 
     public String readMessage(){
         String message = "";
-        String line = "";
         try{
-            while ((line = input.readLine()) != null)
-            message += line;
+            while (input.ready()) {
+                message += input.readLine();
+            }
         }
         catch (IOException e){
             LOG.log(Level.SEVERE, e.getMessage(), e);
