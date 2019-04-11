@@ -7,15 +7,17 @@ import java.util.List;
 
 class VictimsTest {
 
+    private static final int VICTIM_COUNT = 50; // from victims.txt
+    private static final int GROUP_COUNT = 5;
+    private static final int GROUP_SIZE = VICTIM_COUNT / GROUP_COUNT;
+
     @Test
     public void victimsShouldCreateGroups() {
 
-        List<List<String>> groups = Victims.generateGroups("src/test/resources/victims.txt");
-        Assertions.assertTrue(groups.size() != 0);
+        List<List<String>> groups = Victims.generateGroups("src/test/resources/victims.txt", GROUP_COUNT);
+        Assertions.assertEquals(GROUP_COUNT, groups.size());
 
-        for (List<String> group : groups) {
-            Assertions.assertTrue(group.size() != 0);
-            // TODO check max size is respected
-        }
+        // we may have smaller groups
+        groups.forEach(group -> Assertions.assertTrue(group.size() <= GROUP_SIZE));
     }
 }

@@ -1,5 +1,8 @@
 package ch.heig.res.tcp;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,9 +27,14 @@ public class TCPClient {
     private int serverPort;
     private String serverIPAddress;
 
-    public TCPClient(String serverIPAddress, int serverPort) {
+    @Getter
+    @Setter
+    private String newLine;
+
+    public TCPClient(String serverIP, int serverPort) {
         this.serverPort = serverPort;
-        this.serverIPAddress = serverIPAddress;
+        this.serverIPAddress = serverIP;
+        newLine = "\r\n";
     }
 
     /**
@@ -41,7 +49,7 @@ public class TCPClient {
 
         try {
             socket = new Socket(InetAddress.getByName(serverIPAddress), serverPort);
-            socket.setSoTimeout(2500);
+            socket.setSoTimeout(500);
 
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -78,14 +86,19 @@ public class TCPClient {
     }
 
     /**
-     * Sends a message to the server. A new line will be appended to the given value.
+     * Sends a message to the server. A new line will be appended to the given
+     * value if specified.
      *
      * @param message the message to send
      */
-    public void sendMessage(String message, boolean raw) {
+    public void sendMessage(String message, boolean appendNewLine) {
 
         try {
-            output.write(message + (raw ? "" : "\r\n"));
+            output.write(message);
+            if (appendNewLine) {
+                output.write(newLine);
+            }
+
             output.flush();
         }
         catch (IOException e) {
@@ -94,7 +107,7 @@ public class TCPClient {
     }
 
     public void sendMessage(String message) {
-        sendMessage(message, false);
+        sendMessage(message, true);
     }
 
     /**

@@ -39,7 +39,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ch.heig.res.Main</mainClass>
+                            <mainClass>ch.heig.res.app.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
