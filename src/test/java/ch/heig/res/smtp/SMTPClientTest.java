@@ -1,12 +1,16 @@
 package ch.heig.res.smtp;
 
 import ch.heig.res.smtp.SMTPClient;
+import ch.heig.res.smtp.model.Mail;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Disabled
 public class SMTPClientTest {
@@ -16,10 +20,14 @@ public class SMTPClientTest {
 
 
     @Test
-    public void theCLientShouldCarryASimpleTransaction() throws UnknownHostException, IOException{
-        String mail_from = "testMail@mail.com";
-        String rcpt_to = "victim@mail.com";
-        String data = "Hello there.";
+    public void theClientShouldCarryASimpleTransaction() throws UnknownHostException, IOException{
+
+        List<String> victims = Arrays.asList("victim@mail.com", "target@mail.com, someone@somewhere.com");
+
+        Mail mail = new Mail();
+        mail.setExpeditor("prank@mail.com");
+        mail.setDestinators(victims);
+        mail.setMessage("Hello there.");
 
         SMTPClient client = new SMTPClient(serverPort, serverIP);
         client.startConnection();
@@ -27,7 +35,7 @@ public class SMTPClientTest {
         client.smtpGreetings();
 
         //TODO Simple transaction
-        client.sendMail(mail_from, rcpt_to, data);
+        client.sendMail(mail);
 
         client.endConnection();
     }
@@ -38,11 +46,13 @@ public class SMTPClientTest {
         String rcpt_to = "mail.com"; // Wrong format to trigger an error
         String data = "Oups";
 
+        Mail mail = new Mail();
+
             SMTPClient client = new SMTPClient(serverPort, serverIP);
             client.startConnection();
 
             //TODO Abort transaction
-            client.sendMail(mail_from, rcpt_to, data);
+            client.sendMail(mail);
 
             client.endConnection();
     }
