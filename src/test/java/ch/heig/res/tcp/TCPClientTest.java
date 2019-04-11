@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.net.SocketException;
+import java.util.List;
 
 class TCPClientTest {
 
@@ -26,11 +27,9 @@ class TCPClientTest {
         String message = "Hello server!";
         client.sendMessage(message);
 
-        // Wait for response
-        client.setSocketTimeout(2);
-        String response = client.readMessage();
-
-        Assertions.assertEquals(message, response);
+        List<String> responses = client.readMessage();
+        Assertions.assertEquals(1, responses.size());
+        Assertions.assertEquals(message, responses.get(0));
     }
 
     @Test
