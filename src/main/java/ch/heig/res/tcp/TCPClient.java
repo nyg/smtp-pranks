@@ -1,7 +1,3 @@
-/**
- * Source: http://www.java2s.com/Code/Java/Network-Protocol/SendingMailUsingSockets.htm
- */
-
 package ch.heig.res.tcp;
 
 import java.io.BufferedReader;
@@ -11,8 +7,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,23 +17,22 @@ public class TCPClient {
 
     private static final Logger LOG = Logger.getLogger(TCPClient.class.getName());
 
-    protected Socket socket = null;
-    protected BufferedReader input;
-    protected BufferedWriter output;
+    private Socket socket;
+    private BufferedReader input;
+    private BufferedWriter output;
 
-    private int port;
-    private String ip;
-    private String hostName;
+    private int serverPort;
+    private String serverIPAddress;
 
-    public TCPClient(int port, String ip) {
-        this.port = port;
-        this.ip = ip;
+    public TCPClient(String serverIPAddress, int serverPort) {
+        this.serverPort = serverPort;
+        this.serverIPAddress = serverIPAddress;
     }
 
     /**
      * Start TCP connection
      */
-    public void startConnection() {
+    public void openConnection() {
 
         if (socket != null) {
             LOG.warning("Already connected to server, disconnect or create a new TCPClient instance.");
@@ -44,10 +40,13 @@ public class TCPClient {
         }
 
         try {
-            socket = new Socket(InetAddress.getByName(ip), port);
+            socket = new Socket(InetAddress.getByName(serverIPAddress), serverPort);
+            socket.setSoTimeout(2500);
+
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
             throw new RuntimeException(e);
         }
@@ -56,7 +55,7 @@ public class TCPClient {
     /**
      * End TCP connection
      */
-    public void endConnection() {
+    public void closeConnection() {
 
         if (socket == null) {
             LOG.warning("Not connected to server.");
@@ -67,9 +66,11 @@ public class TCPClient {
             input.close();
             output.close();
             socket.close();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
-        } finally {
+        }
+        finally {
             output = null;
             socket = null;
             socket = null;
@@ -77,23 +78,23 @@ public class TCPClient {
     }
 
     /**
-     * Sends a message to the server. A new line will be appended to the given
-     * value.
+     * Sends a message to the server. A new line will be appended to the given value.
      *
      * @param message the message to send
      */
-    public void sendMessage(String message) {
-        sendMessage(message, false);
-    }
-
     public void sendMessage(String message, boolean raw) {
 
         try {
             output.write(message + (raw ? "" : "\r\n"));
             output.flush();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
+    }
+
+    public void sendMessage(String message) {
+        sendMessage(message, false);
     }
 
     /**
@@ -101,28 +102,24 @@ public class TCPClient {
      *
      * @return the server's message
      */
-    public String readMessage() {
+    public List<String> readResponses() {
 
-        StringBuilder message = new StringBuilder();
+        List<String> responses = new ArrayList<>();
         try {
             String line;
             while ((line = input.readLine()) != null) {
-                message.append(line);
+                responses.add(line);
             }
-        } catch (SocketTimeoutException e) {
-            // no big deal, return what we have read until now
-            LOG.warning("A SocketTimeoutException occured.");
-        } catch (IOException e) {
+        }
+        catch (SocketTimeoutException e) {
+            if (responses.size() == 0) {
+                LOG.warning("Call to TCPClient.readResponses return no data.");
+            }
+        }
+        catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
 
-        return message.toString();
-    }
-
-    /**
-     * Method only for unit tests. Package visibility.
-     */
-    void setSocketTimeout(int seconds) throws SocketException {
-        socket.setSoTimeout(seconds * 1000);
+        return responses;
     }
 }

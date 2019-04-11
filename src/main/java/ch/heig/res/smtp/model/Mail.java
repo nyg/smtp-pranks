@@ -17,5 +17,9 @@ public class Mail {
 
     @Getter
     @Setter
+    private String subject;
+
+    @Getter
+    @Setter
     private String message;
 }
