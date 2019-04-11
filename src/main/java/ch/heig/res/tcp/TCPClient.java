@@ -47,8 +47,7 @@ public class TCPClient {
             socket = new Socket(InetAddress.getByName(ip), port);
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
             throw new RuntimeException(e);
         }
@@ -68,11 +67,9 @@ public class TCPClient {
             input.close();
             output.close();
             socket.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
-        }
-        finally {
+        } finally {
             output = null;
             socket = null;
             socket = null;
@@ -86,12 +83,15 @@ public class TCPClient {
      * @param message the message to send
      */
     public void sendMessage(String message) {
+        sendMessage(message, false);
+    }
+
+    public void sendMessage(String message, boolean raw) {
 
         try {
-            output.write(message + "\n");
+            output.write(message + (raw ? "" : "\r\n"));
             output.flush();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
     }
@@ -109,12 +109,10 @@ public class TCPClient {
             while ((line = input.readLine()) != null) {
                 message.append(line);
             }
-        }
-        catch (SocketTimeoutException e) {
+        } catch (SocketTimeoutException e) {
             // no big deal, return what we have read until now
             LOG.warning("A SocketTimeoutException occured.");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             LOG.log(Level.SEVERE, e.getMessage(), e);
         }
 
