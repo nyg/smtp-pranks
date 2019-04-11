@@ -24,7 +24,7 @@ public class TCPClient {
     private int serverPort;
     private String serverIPAddress;
 
-    public TCPClient(int serverPort, String serverIPAddress) {
+    public TCPClient(String serverIPAddress, int serverPort) {
         this.serverPort = serverPort;
         this.serverIPAddress = serverIPAddress;
     }
@@ -32,7 +32,7 @@ public class TCPClient {
     /**
      * Start TCP connection
      */
-    public void startConnection() {
+    public void openConnection() {
 
         if (socket != null) {
             LOG.warning("Already connected to server, disconnect or create a new TCPClient instance.");
@@ -55,7 +55,7 @@ public class TCPClient {
     /**
      * End TCP connection
      */
-    public void endConnection() {
+    public void closeConnection() {
 
         if (socket == null) {
             LOG.warning("Not connected to server.");
@@ -102,7 +102,7 @@ public class TCPClient {
      *
      * @return the server's message
      */
-    public List<String> readMessage() {
+    public List<String> readResponses() {
 
         List<String> responses = new ArrayList<>();
         try {
@@ -113,7 +113,7 @@ public class TCPClient {
         }
         catch (SocketTimeoutException e) {
             if (responses.size() == 0) {
-                LOG.warning("Call to TCPClient.readMessage return no data.");
+                LOG.warning("Call to TCPClient.readResponses return no data.");
             }
         }
         catch (IOException e) {

@@ -14,28 +14,28 @@ class TCPClientTest {
 
     @Test
     public void tcpClientShouldConnectToServer() {
-        TCPClient client = new TCPClient(serverPort, serverIP);
-        client.startConnection();
+        TCPClient client = new TCPClient(serverIP, serverPort);
+        client.openConnection();
     }
 
     @Test
     public void tcpClientShouldSendMessageToServerAndReceiveResponse() throws InterruptedException, SocketException {
 
-        TCPClient client = new TCPClient(serverPort, serverIP);
-        client.startConnection();
+        TCPClient client = new TCPClient(serverIP, serverPort);
+        client.openConnection();
 
         String message = "Hello server!";
         client.sendMessage(message);
 
-        List<String> responses = client.readMessage();
+        List<String> responses = client.readResponses();
         Assertions.assertEquals(1, responses.size());
         Assertions.assertEquals(message, responses.get(0));
     }
 
     @Test
     public void tcpClientShouldCloseConnectionWithServer() {
-        TCPClient client = new TCPClient(serverPort, serverIP);
-        client.startConnection();
-        client.endConnection();
+        TCPClient client = new TCPClient(serverIP, serverPort);
+        client.openConnection();
+        client.closeConnection();
     }
 }
