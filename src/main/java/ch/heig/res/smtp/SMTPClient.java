@@ -1,9 +1,11 @@
 package ch.heig.res.smtp;
 
+import ch.heig.res.smtp.model.Mail;
 import ch.heig.res.tcp.TCPClient;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -30,16 +32,14 @@ public class SMTPClient extends TCPClient {
 
     /**
      *
-     * @param mail_from sender
-     * @param rcpt receiver
-     * @param data message
+     * @param mail mail to send
      * @throws IOException
      */
-    public void sendMail(String mail_from, String rcpt, String data)
+    public void sendMail(Mail mail)
             throws IOException {
 
-        String mailFrom = "MAIL FROM: " + mail_from ;
-        String rcptTo = "RCPT TO:<" + rcpt + ">";
+        String mailFrom = "MAIL FROM: " + mail.getExpeditor();
+        String rcptTo;
 
         // sending mail's sender
         sendMessage(mailFrom);
@@ -51,8 +51,13 @@ public class SMTPClient extends TCPClient {
         }
 */
 
-        // sending mail's target
-        sendMessage(rcptTo);
+        for(String dest : mail.getDestinators()){
+            rcptTo = "RCPT TO: " + dest;
+
+            // sending mail's target
+            sendMessage(rcptTo);
+        }
+
 
 /*
         if (readMessage() != "250 OK"){
@@ -70,7 +75,7 @@ public class SMTPClient extends TCPClient {
 */
 
         // sending mail's message
-        sendMessage(data);
+        sendMessage(mail.getMessage());
 
         // Ending message
         sendMessage(endData, true);
@@ -78,6 +83,14 @@ public class SMTPClient extends TCPClient {
         // Getting server's answer
         readMessage();
 
+    }
+
+    /**
+     * Make the mail header before sending it
+     * @param mail mail to complete
+     */
+    public void makeHeader(Mail mail){
+        //TODO add From, To, Subject to mail data
     }
 
     /**
