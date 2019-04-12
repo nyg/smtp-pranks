@@ -4,13 +4,43 @@
 
 From a list of emails, *SMTP Pranks* creates groups consisting of one sender and multiple recipients. *SMTP Pranks* then chooses a message and sends it to the recipients on behalf of the sender.
 
-The list of emails, the groups sizes and the messages to be sent are all user-defined, making SMTP very flexible.
+The list of emails, the groups sizes and the messages to be sent are all user-defined, making *SMTP Pranks* very flexible.
 
 *SMTP Pranks* is a lab project for the *Network programming* course at the HEIG-VD. Its requirements are defined here: [SoftEng-HEIGVD/Teaching-HEIGVD-RES-2019-Labo-SMTP](https://github.com/SoftEng-HEIGVD/Teaching-HEIGVD-RES-2019-Labo-SMTP).
 
 ## Configure, Build & Run
 
-The list of emails are to be defined in the `victims.txt` file, one email per line. The messages to be sent must be written in the `pranks.txt` file. The group size is set in the `application.properties` file. All files are in the `src/main/resources` folder.
+### `application.properties`
+
+By default, *SMTP Pranks* comes with its own files (`application.properties`, `victims.txt` and `pranks.txt`). Of coure, it is possible to specifiy a different set of files.
+
+First, it is necessary to specify the `application.properties` file. Its location can either be given by passing the system property `app.properties.location` when starting the JAR or by placing the file in the current working directory from which the JAR will be launched.
+
+```sh
+# using system property
+$ java -Dapp.properties.location=/path/to/application.properties -jar smtp-pranks-1.0.0.jar
+# or using current working directory
+$ ls -1
+application.properties
+smtp-pranks-1.0.0.jar
+$ java -jar smtp-pranks-1.0.0.jar
+```
+
+The `application.properties` file is then used to find the two other files (`victims.txt` and `pranks.txt`). It is also used to specify the SMTP server we want to send the mails to and the size of each group. Here is its default content:
+
+```
+app.server.ip             = 127.0.0.1
+app.server.port           = 2525
+app.file.pranks.location  = src/main/resources/pranks.txt
+app.file.victims.location = src/main/resources/victims.txt
+app.victims.groupCount    = 5
+```
+
+### Victims and pranks file format
+
+The list of emails are to be defined in the `victims.txt` file, one email per line. The messages to be sent must be written in the `pranks.txt` file. The first line of a prank will be the subject of the email. Each prank is separated by three equal signs on a single line.
+
+### Build and run
 
 To build *SMTP Pranks*, use [Maven](https://maven.apache.org):
 
@@ -48,7 +78,7 @@ $ ./build-image.sh   # will clone and build MockMock as well as create the Docke
 $ ./run-container.sh # starts up the container for the Docker image 
 ```
 
-The MockMock server is listens to port 2525 of the localhost and the Web interface can be access at [localhost:8282](http://localhost:8282).
+The MockMock server listens to port 2525 on localhost and the Web interface can be access at [localhost:8282](http://localhost:8282).
 
 ## Architecture
 
