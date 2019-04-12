@@ -9,43 +9,48 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Victims {
 
     private static final Logger LOG = Logger.getLogger(Victims.class.getName());
 
     /**
-     * Reads given file and creates random groups of victims. Each group consists of up to 6 victims.
+     * Reads given file and creates random groups of victims. Each group
+     * consists of at least three victims (one of which will be the sender).
      *
      * @param victimsFile the file to parse
      * @return a list of list of emails
      */
-    public static List<List<String>> generateGroups(String victimsFile) {
+    public static List<List<String>> generateGroups(String victimsFile, Integer groupCount) {
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(victimsFile)));
-            List<List<String>> groups = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(victimsFile)))) {
+
+            List<List<String>> groups = Stream.generate(ArrayList<String>::new).limit(groupCount).collect(Collectors.toList());
+            List<Integer> groupIndexes = fillGroupIndexes(groupCount);
 
             String line;
-            int groupCount = getRandomGroupCount();
-            List<String> currentGroup = new ArrayList<>();
-
+            int lineCount = 0;
             while ((line = reader.readLine()) != null) {
 
-                if (currentGroup.size() == groupCount) {
-                    groups.add(currentGroup);
-                    currentGroup = new ArrayList<>();
-                    groupCount = getRandomGroupCount();
+                if (groupIndexes.isEmpty()) {
+                    groupIndexes = fillGroupIndexes(groupCount);
                 }
 
-                currentGroup.add(line);
+                // a way of generating random groups
+                int groupIndex = ThreadLocalRandom.current().nextInt(groupIndexes.size());
+                groups.get(groupIndexes.remove(groupIndex)).add(line);
+
+                lineCount++;
             }
 
-            if (currentGroup.size() != 0) {
-                groups.add(currentGroup);
+            // ensure all groups are of at least three victims.
+            if (lineCount / groupCount < 3) {
+                throw new IllegalArgumentException("Groups created are too small. Too many groups specified or not enough emails provided.");
             }
 
-            reader.close();
             return groups;
         }
         catch (IOException e) {
@@ -54,7 +59,7 @@ public class Victims {
         }
     }
 
-    private static int getRandomGroupCount() {
-        return ThreadLocalRandom.current().nextInt(4, 7);
+    private static List<Integer> fillGroupIndexes(Integer groupCount) {
+        return IntStream.range(0, groupCount).boxed().collect(Collectors.toList());
     }
 }
