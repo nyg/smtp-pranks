@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="iso-8859-15" standalone="no"?>
+<classDiagram>
+  <diagramElements defaultViewEntities="ALL" defaultViewEnum="true" defaultViewMethods="TYPE_AND_NAME" defaultVisibleTypes="true" informations="" name="SMTP-Pranks">
+    <entity entityType="CLASS" id="395" isAbstract="false" name="Victims" visibility="PUBLIC">
+      <method isAbstract="false" isStatic="true" name="generateGroups" returnType="List&lt;List&lt;String&gt;&gt;" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="victimsFile" type="String"/>
+        <variable const="false" name="groupCount" type="Integer"/>
+      </method>
+    </entity>
+    <entity entityType="CLASS" id="381" isAbstract="false" name="Pranks" visibility="PUBLIC">
+      <method isAbstract="false" isStatic="true" name="next()" returnType="Prank" view="DEFAULT" visibility="PUBLIC"/>
+    </entity>
+    <entity entityType="CLASS" id="282" isAbstract="false" name="PrankGenerator" visibility="PUBLIC">
+      <method is-constructor="true" isAbstract="false" isStatic="false" name="PrankGenerator" returnType="" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="victimsFile" type="String"/>
+        <variable const="false" name="pranksFile" type="String"/>
+        <variable const="false" name="groupCount" type="int"/>
+      </method>
+      <method isAbstract="false" isStatic="false" name="generateMails" returnType="List&lt;Mail&gt;" view="DEFAULT" visibility="PUBLIC"/>
+    </entity>
+    <inheritance id="4">
+      <child>2</child>
+      <parent>1</parent>
+    </inheritance>
+    <entity entityType="CLASS" id="2" isAbstract="false" name="SMTPClient" visibility="PUBLIC">
+      <method is-constructor="true" isAbstract="false" isStatic="false" name="SMTPClient" returnType="" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="serverIP" type="String"/>
+        <variable const="false" name="serverPort" type="int"/>
+      </method>
+      <method isAbstract="false" isStatic="false" name="sendEhlo" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="sendMail" returnType="void" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="mail" type="Mail"/>
+      </method>
+      <method isAbstract="false" isStatic="false" name="sendQuit" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
+    </entity>
+    <entity entityType="CLASS" id="1" isAbstract="false" name="TCPClient" visibility="PUBLIC">
+      <attribute const="false" defaultValue="" isStatic="false" name="newLine" type="String" visibility="PRIVATE"/>
+      <method is-constructor="true" isAbstract="false" isStatic="false" name="TCPClient" returnType="" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="serverIP" type="String"/>
+        <variable const="false" name="port" type="int"/>
+      </method>
+      <method isAbstract="false" isStatic="false" name="openConnection" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="closeConnection" returnType="void" view="DEFAULT" visibility="PUBLIC"/>
+      <method isAbstract="false" isStatic="false" name="sendMessage" returnType="void" view="DEFAULT" visibility="PUBLIC">
+        <variable const="false" name="message" type="String"/>
+        <variable const="false" name="appendNewLine" type="boolean"/>
+      </method>
+      <method isAbstract="false" isStatic="false" name="readResponses" returnType="List&lt;String&gt;" view="DEFAULT" visibility="PUBLIC"/>
+    </entity>
+  </diagramElements>
+  <umlView grid="10" name="Main view" open="true">
+    <relationView color="-12566464" relationId="4">
+      <line>
+        <point>
+          <x>241</x>
+          <y>321</y>
+        </point>
+        <point>
+          <x>241</x>
+          <y>276</y>
+        </point>
+      </line>
+    </relationView>
+    <componentView color="-2079" componentID="1" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>50</x>
+        <y>130</y>
+        <w>380</w>
+        <h>145</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="2" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>50</x>
+        <y>320</y>
+        <w>380</w>
+        <h>115</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="282" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>470</x>
+        <y>130</y>
+        <w>450</w>
+        <h>85</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="381" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>470</x>
+        <y>250</y>
+        <w>450</w>
+        <h>70</h>
+      </geometry>
+    </componentView>
+    <componentView color="-2079" componentID="395" displayAttributes="true" displayDefault="true" displayMethods="true">
+      <geometry>
+        <x>470</x>
+        <y>360</y>
+        <w>450</w>
+        <h>70</h>
+      </geometry>
+    </componentView>
+    <note color="-2079" content="Communication layer">
+      <noteGeometry>
+        <x>170</x>
+        <y>60</y>
+        <w>143</w>
+        <h>30</h>
+      </noteGeometry>
+    </note>
+    <note color="-2079" content="Application logic">
+      <noteGeometry>
+        <x>630</x>
+        <y>60</y>
+        <w>119</w>
+        <h>30</h>
+      </noteGeometry>
+    </note>
+  </umlView>
+</classDiagram>

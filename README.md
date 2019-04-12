@@ -8,7 +8,7 @@ The list of emails, the groups sizes and the messages to be sent are all user-de
 
 *SMTP Pranks* is a lab project for the *Network programming* course at the HEIG-VD. Its requirements are defined here: [SoftEng-HEIGVD/Teaching-HEIGVD-RES-2019-Labo-SMTP](https://github.com/SoftEng-HEIGVD/Teaching-HEIGVD-RES-2019-Labo-SMTP).
 
-## Configure, Build & Run
+## Configuration
 
 ### `application.properties`
 
@@ -36,11 +36,11 @@ app.file.victims.location = src/main/resources/victims.txt
 app.victims.groupCount    = 5
 ```
 
-### Victims and pranks file format
+### Victims and Pranks File Format
 
 The list of emails are to be defined in the `victims.txt` file, one email per line. The messages to be sent must be written in the `pranks.txt` file. The first line of a prank will be the subject of the email. Each prank is separated by three equal signs on a single line.
 
-### Build and run
+## Build and Run
 
 To build *SMTP Pranks*, use [Maven](https://maven.apache.org):
 
@@ -60,7 +60,7 @@ $ mvn clean package
 [INFO] ------------------------------------------------------------------------
 ```
 
-The built `jar` is placed in the `target` directory. Run it with the following command:
+This will also run unit tests. An internet connection is required for them to succeed. Tests can be skipped using the `-Dmaven.test.skip=true` option. The built JAR is placed in the `target` directory. Run it with the following command:
 
 ```sh
 $ java -jar target/smtp-pranks-1.0.0.jar
@@ -82,4 +82,11 @@ The MockMock server listens to port 2525 on localhost and the Web interface can 
 
 ## Architecture
 
-TODO
+### Class Diagram
+
+![class diagram](figures/smtp-pranks.png)
+
+### Classes Description
+
+* A **`PrankGenerator`** instance takes the victims file, the pranks file and the group count value as input, and is then able to generate a list of `Mail` instances as output (through its `generateMails` method). To accomplish this, it uses the **`Pranks`** and **`Victims`** util classes, which only have one static method each. It is these two classes which will read the victims and pranks file.
+* The `Mail` instances are then sent using an **`SMTPClient`** instance. Its `sendEhlo` method must first be called, then any number of mails can be sent using the `sendMail` method, finally the `sendQuit` method must be invoked. The `SMTPClient` class inherits from the **`TCPClient`** class which handles the socket-level communication with the server.
