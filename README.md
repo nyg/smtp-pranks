@@ -66,14 +66,14 @@ This will also run unit tests. An internet connection is required for them to su
 $ java -jar target/smtp-pranks-1.0.0.jar
 ```
 
-## Testing
+## Mock SMTP Server
 
 When running *SMTP Pranks*, an SMTP server must be specified for the mails to be sent. Instead of using a real-world server, a mock one can be used. A mock SMTP server will not relay the mails it receives to other SMTP servers, instead, it keeps them so they can be viewed and analyzed, usually through a Web interface.
 
-Two scripts to build and run a [MockMock](https://github.com/dc55028/MockMock) [Docker](https://www.docker.com) image are provided in the `docker` folder. Use the following commands to build and run the image:
+Two scripts to build and run a [MockMock](https://github.com/dc55028/MockMock) [Docker](https://www.docker.com) image are provided in the `docker/mockmock` folder. Use the following commands to build and run the image:
 
 ```sh
-$ cd docker
+$ cd docker/mockmock
 $ ./build-image.sh   # will clone and build MockMock as well as create the Docker image
 $ ./run-container.sh # starts up the container for the Docker image 
 ```

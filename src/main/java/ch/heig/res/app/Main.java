@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.logging.Logger;
 
 public class Main {
@@ -66,11 +67,11 @@ public class Main {
         }
 
         // launching PrankGenerator if user is okay
-        System.out.print("\nLaunch prank campaign? (yes/no) ");
-        String userInput = System.console().readLine();
-        System.out.println("");
+        LOG.info("");
+        LOG.info("Launch prank campaign? (yes/no)");
 
-        if (userInput.matches("y(es)?")) {
+        Scanner scanner = new Scanner(System.in);
+        if (scanner.nextLine().matches("y(es)?")) {
             LOG.info("Launching campaign!");
             SMTPClient smtpClient = new SMTPClient(serverIP, serverPort);
             smtpClient.sendEhlo();

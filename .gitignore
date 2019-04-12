@@ -5,5 +5,5 @@
 *.iml
 target
 *.jar
-docker/MockMock
+docker/mockmock/MockMock
 .DS_Store
