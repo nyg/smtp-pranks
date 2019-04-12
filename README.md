@@ -42,7 +42,17 @@ The list of emails are to be defined in the `victims.txt` file, one email per li
 
 ## Build and Run
 
-To build *SMTP Pranks*, use [Maven](https://maven.apache.org):
+If you don't want to build *SMTP Pranks* yourself, you can build a Docker image and run it using the scripts available in `docker/smtp-pranks`:
+
+```sh
+$ cd docker/smtp-pranks
+$ ./build-image.sh
+$ ./build-container.sh
+```
+
+Note: the files in `docker/smtp-pranks/user-files` will be copied into the Docker image. You may need to edit the IP address of the SMTP server you want to reach (see **Mock SMTP Server** bellow). 
+
+To build *SMTP Pranks* yourself, use [Maven](https://maven.apache.org):
 
 ```sh
 $ mvn clean package
