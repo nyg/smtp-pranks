@@ -12,7 +12,7 @@ The list of emails, the groups sizes and the messages to be sent are all user-de
 
 ### `application.properties`
 
-By default, *SMTP Pranks* comes with its own files (`application.properties`, `victims.txt` and `pranks.txt`). Of coure, it is possible to specifiy a different set of files.
+By default, *SMTP Pranks* comes with its own files (`application.properties`, `victims.txt` and `pranks.txt`). Of course, it is possible to specifiy a different set of files.
 
 First, it is necessary to specify the `application.properties` file. Its location can either be given by passing the system property `app.properties.location` when starting the JAR or by placing the file in the current working directory from which the JAR will be launched.
 
